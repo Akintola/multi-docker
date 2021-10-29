@@ -14,7 +14,7 @@ after_success:
   - docker build -t akintola/multi-worker ./worker
   - docker build -t akintola/multi-nginx ./nginx
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
-  - docker push  akintola/multi-client
-  - docker push  akintola/multi-server
-  - docker push  akintola/multi-worker
-  - docker push  akintola/multi-nginx
+  - docker push akintola/multi-client
+  - docker push akintola/multi-server
+  - docker push akintola/multi-worker
+  - docker push akintola/multi-nginx
