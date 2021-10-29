@@ -12,7 +12,13 @@ script:
 
 after_success:
   - docker build -t akintola/multi-client ./client
+  - docker build -t akintola/multi-nginx ./nginx
+  - docker build -t akintola/multi-server ./server
+  - docker build -t akintola/multi-worker ./worker
   # Log in to the docker CLI
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
   # Take those images and push them to docker hub
   - docker push akintola/multi-client
+  - docker push akintola/multi-nginx
+  - docker push akintola/multi-server
+  - docker push akintola/multi-worker
