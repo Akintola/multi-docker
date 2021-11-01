@@ -1,26 +1,34 @@
 version: '3'
 services:
   nginx:
-    image: "akintola/multi-nginx"  
+    restart: always
+    build: ./nginx
     ports:
       - "5000:80"
     depends_on:
       - api
       - client
   postgresql:
-    image: "postgres"
+    image: "postgres:latest"
     environment:
       - POSTGRES_PASSWORD=postgres_password
   redis:
     image: "redis:latest"
   client:
-    image: "akintola/multi-client"
-    mem_limit: 128m
-    hostname: client
-  server:
-    image: "akintola/multi-server"
-    mem_limit: 128m
-    hostname: api
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    stdin_open: true
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -30,9 +38,12 @@ services:
       - PGPASSWORD=postgres_password
       - PGPORT=5432
   worker:
-    image: "akintola/multi-worker"
-    mem_limit: 128m
-    hostname: worker
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./worker
+    volumes:
+      - /app/node_modules
+      - ./worker:/app
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
